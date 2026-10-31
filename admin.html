@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Map Manager · Ramzie Rosli</title>
+<style>
+:root{--ink:#2a2521;--muted:#7a6c60;--line:rgba(40,30,22,.16);--bg:#f4efe6;--card:#fffdf8;--green:#1dbf73;--serif:Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);padding-bottom:110px}
+button{font:inherit;cursor:pointer;color:inherit}
+header{background:#1e1814;color:#f3e9d8;padding:26px max(18px,4vw)}
+header h1{font:600 22px/1 var(--serif);letter-spacing:.32em;text-transform:uppercase}
+header p{margin-top:10px;opacity:.75;font-size:14px;max-width:760px}
+main{max-width:1060px;margin:0 auto;padding:22px max(14px,3vw)}
+h2{font:600 15px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;margin:34px 0 12px;display:flex;align-items:center;gap:10px}
+h2 i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;letter-spacing:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.how .card b{display:block;margin-bottom:4px}
+.how .card span{font-size:13px;color:var(--muted)}
+@media(max-width:700px){.how{grid-template-columns:1fr}}
+#drop{border:2px dashed rgba(40,30,22,.35);border-radius:16px;padding:34px 16px;text-align:center;background:rgba(255,255,255,.5);transition:background .2s,border-color .2s}
+#drop.over{background:#e9f8f0;border-color:var(--green)}
+#drop b{font:600 18px var(--serif);letter-spacing:.06em}
+#drop p{color:var(--muted);font-size:13px;margin:6px 0 14px}
+.btn{display:inline-flex;align-items:center;gap:.5em;padding:.7em 1.2em;border-radius:99px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:13px}
+.btn:hover{background:#f3ece0}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 4px 14px rgba(29,191,115,.35)}
+.btn.primary:hover{background:#17a862}
+.btn.danger{color:#b3261e}
+.btn.sm{padding:.4em .8em;font-size:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.item{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:10px}
+.item .th{width:84px;aspect-ratio:1822/2576;background:#1e1814;border-radius:4px;overflow:hidden;display:grid;place-items:center;color:#fff;font-size:10px;text-align:center}
+.item .th img{width:100%;height:100%;object-fit:cover;display:block}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fields label{display:flex;flex-direction:column;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);gap:3px}
+.fields label.wide{grid-column:1/-1}
+input,select,textarea{font:inherit;font-size:14px;padding:.5em .65em;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);width:100%;letter-spacing:0;text-transform:none}
+textarea{resize:vertical;min-height:38px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px;grid-column:1/-1}
+.acts select{width:auto;max-width:100%}
+@media(max-width:760px){.fields{grid-template-columns:1fr 1fr}.item{grid-template-columns:64px 1fr}.item .th{width:64px}}
+.room{margin-top:16px}
+.rh{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+.rh input{font:600 17px var(--serif);letter-spacing:.14em;text-transform:uppercase;max-width:260px}
+.tag{font-size:12px;color:var(--muted);background:#f0e9db;border-radius:99px;padding:.3em .8em}
+.tag.warn{background:#fde8c8;color:#8a4b00}
+.grp{margin-top:12px;padding:10px 12px;border-radius:12px;background:#faf5ea;border:1px solid var(--line)}
+.grp .gh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grp .gh input{max-width:280px;font-weight:600}
+.empty{color:var(--muted);font-size:13px;padding:8px 2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.pk{display:grid;grid-template-columns:1fr 100px 70px;gap:8px;margin-bottom:6px;align-items:center}
+.pk label.chk{display:flex;gap:6px;align-items:center;font-size:13px}
+.pk input[type=radio]{width:auto}
+.rv{display:grid;grid-template-columns:160px 100px 1fr auto;gap:8px;margin-bottom:8px;align-items:start}
+@media(max-width:700px){.rv{grid-template-columns:1fr 1fr}.rv textarea{grid-column:1/-1}}
+#bar{position:fixed;left:0;right:0;bottom:0;background:#1e1814;color:#f3e9d8;padding:12px max(14px,3vw);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;z-index:10;box-shadow:0 -6px 24px rgba(0,0,0,.25)}
+#bar .btn{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff}
+#bar .btn.primary{background:var(--green);border-color:var(--green)}
+#status{font-size:13px;opacity:.85;max-width:520px}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+.note b{color:var(--ink)}
+.addroom{display:grid;grid-template-columns:1.2fr 1.2fr 1fr 1fr auto;gap:8px;align-items:end}
+.addroom label{display:flex;flex-direction:column;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);gap:3px}
+@media(max-width:860px){.addroom{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Map Manager</h1>
+  <p>Drop in your maps, say which room and frame each one belongs to, then download one file and upload it to GitHub. No code needed. Nothing is uploaded from this page; everything stays on your computer until you upload it yourself.</p>
+</header>
+<main>
+  <div class="how">
+    <div class="card"><b>1. Drop your maps</b><span>Drag the image files into the box below. Give each one a title and subtitle.</span></div>
+    <div class="card"><b>2. Say where each belongs</b><span>Pick a room (and a frame group in City) and press Place. You can reorder or move maps later.</span></div>
+    <div class="card"><b>3. Download and upload</b><span>Press “Download update”, unzip it, then drag the files into your GitHub repository.</span></div>
+  </div>
+
+  <h2><i>1</i> Drop your maps</h2>
+  <div id="drop">
+    <b>Drop map images here</b>
+    <p>JPG or PNG, any size. They are resized automatically to keep the gallery fast.</p>
+    <button class="btn primary" id="pick">Choose images</button>
+    <button class="btn" id="addPh">Add a “coming soon” placeholder</button>
+  </div>
+  <div id="unplaced"></div>
+
+  <h2><i>2</i> Rooms and frames</h2>
+  <div id="rooms"></div>
+  <div class="card" style="margin-top:16px">
+    <b>Add a new room (a new door in the walkway)</b>
+    <div class="addroom" style="margin-top:10px">
+      <label>Room name<input id="nrName" placeholder="e.g. Travel"></label>
+      <label>One-line description<input id="nrBlurb" placeholder="e.g. Places I have been"></label>
+      <label>Look<select id="nrTheme"><option value="city">Bright white wall, thin black frames</option><option value="memory">Natural wall, wooden frames</option><option value="illusion">Dark wall, colourful frames</option></select></label>
+      <label>Frames<select id="nrLayout"><option value="single">Each map has its own frame</option><option value="groups">Sliding frames (variations in one frame)</option></select></label>
+      <button class="btn primary" id="nrAdd">Add room</button>
+    </div>
+    <p class="note">A room fits <b>6 frames</b>. If you add more maps than that, the extra ones share the last frame and visitors slide through them.</p>
+  </div>
+
+  <h2><i>3</i> Shop link, prices and reviews</h2>
+  <div class="two">
+    <div class="card">
+      <b>Etsy shop link</b>
+      <input id="etsy" placeholder="https://www.etsy.com/shop/YourShop" style="margin:8px 0 14px">
+      <b>Packages shown at the laptop</b>
+      <div id="pkgs" style="margin-top:8px"></div>
+      <b style="display:block;margin-top:12px">Extras (one per line: name | price)</b>
+      <textarea id="extras" rows="6" style="margin-top:6px"></textarea>
+    </div>
+    <div class="card">
+      <b>Guestbook reviews (shown on the lobby board)</b>
+      <div id="reviews" style="margin-top:10px"></div>
+      <button class="btn sm" id="addRv">+ Add a review</button>
+    </div>
+  </div>
+</main>
+
+<div id="bar">
+  <div id="status">Loading…</div>
+  <div class="row">
+    <button class="btn" id="openJson">Open maps.json…</button>
+    <button class="btn" id="dlJson">Download maps.json only</button>
+    <button class="btn primary" id="dlZip">Download update (zip)</button>
+  </div>
+</div>
+<input type="file" id="fImgs" accept="image/*" multiple hidden>
+<input type="file" id="fJson" accept=".json,application/json" hidden>
+<datalist id="styles"><option>Silhouette</option><option>Classic</option><option>Vintage</option><option>Neon</option><option>Midnight</option><option>Memory</option><option>Specialised</option></datalist>
+
+<script>
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const slug=s=>(String(s||'').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''))||'map';
+const MAXF=6;
+const THEME_NAME={city:'Bright · black frames',memory:'Natural · wooden frames',illusion:'Dark · colourful frames'};
+let data={site:{etsyUrl:'',packages:[{n:'1 map',p:'$5'},{n:'3 maps',p:'$12'},{n:'5 maps',p:'$20',best:true}],extras:[]},rooms:[],maps:{},reviews:[]};
+let unplaced=[], uid=1, loaded=false;
+
+/* ---------- loading ---------- */
+function adopt(j){
+  data={site:Object.assign({etsyUrl:'',packages:[],extras:[]},j.site||{}),rooms:j.rooms||[],maps:j.maps||{},reviews:j.reviews||[]};
+  data.rooms.forEach(r=>{ if(r.layout==='groups'){ r.groups=r.groups||[]; } else { r.layout='single'; r.maps=r.maps||[]; } });
+  loaded=true; render();
+}
+fetch('maps.json?v='+Date.now(),{cache:'no-store'}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(adopt)
+  .catch(()=>{ render(); setStatus('Could not load maps.json automatically. Press “Open maps.json…” and choose the file from your repository.'); });
+$('#openJson').onclick=()=>$('#fJson').click();
+$('#fJson').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ adopt(JSON.parse(await f.text())); setStatus('Loaded '+f.name); }catch(_){ setStatus('That file is not a valid maps.json.'); } e.target.value=''; };
+
+/* ---------- dropping images ---------- */
+const drop=$('#drop');
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{ e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{ e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop',e=>addFiles([...e.dataTransfer.files]));
+addEventListener('dragover',e=>e.preventDefault()); addEventListener('drop',e=>{ e.preventDefault(); if(!drop.contains(e.target)) addFiles([...e.dataTransfer.files]); });
+$('#pick').onclick=()=>$('#fImgs').click(); $('#fImgs').onchange=e=>{ addFiles([...e.target.files]); e.target.value=''; };
+$('#addPh').onclick=()=>{ unplaced.push({id:uid++,placeholder:true,title:'',subtitle:'',style:'',variant:'',description:''}); render(); };
+function pretty(n){ return n.replace(/\.[^.]+$/,'').replace(/[_\-]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b\w/g,c=>c.toUpperCase()); }
+function addFiles(files){ files.filter(f=>f.type.startsWith('image/')).forEach(f=>unplaced.push({id:uid++,file:f,url:URL.createObjectURL(f),title:pretty(f.name),subtitle:'',style:'',variant:'',description:''})); render(); }
+
+/* ---------- placing / moving ---------- */
+function targets(){
+  const t=[]; data.rooms.forEach((r,ri)=>{ if(r.layout==='groups'){ (r.groups||[]).forEach((g,gi)=>t.push({key:`g:${ri}:${gi}`,label:`${r.name} › ${g.label||'Group '+(gi+1)}`})); t.push({key:`ng:${ri}`,label:`${r.name} › + new frame group…`}); } else t.push({key:`r:${ri}`,label:r.name}); }); return t;
+}
+const optionsHtml=sel=>targets().map(t=>`<option value="${t.key}"${t.key===sel?' selected':''}>${esc(t.label)}</option>`).join('');
+function listFor(key){
+  const [k,a,b]=key.split(':'); const r=data.rooms[+a];
+  if(k==='r') return r.maps; if(k==='g') return r.groups[+b].maps;
+  if(k==='ng'){ const n=window.prompt('Name this new frame group (for example “Street maps”):','New group'); if(n==null) return null; r.groups.push({label:n||'New group',maps:[]}); return r.groups[r.groups.length-1].maps; }
+}
+function uniqueId(base){ let id=base,i=2; while(data.maps[id]){ id=base+'-'+(i++); } return id; }
+function place(uidn){
+  const it=unplaced.find(u=>u.id===uidn), sel=$('#t'+uidn); if(!sel||!sel.value){ setStatus('Create a room first, then place the map.'); return; }
+  if(!it.title.trim()){ setStatus('Please give the map a title first.'); $('#ti'+uidn).focus(); return; }
+  const list=listFor(sel.value); if(!list) return;
+  const id=uniqueId(slug(it.title)+(it.style?'-'+slug(it.style):''));
+  data.maps[id]={title:it.title.trim(),subtitle:it.subtitle.trim(),style:it.style.trim(),variant:it.variant.trim(),description:it.description.trim(),image:it.image||''};
+  if(it.file){ data.maps[id]._file=it.file; data.maps[id]._url=it.url; }
+  list.push(id); unplaced=unplaced.filter(u=>u!==it); render(); setStatus(`Placed “${data.maps[id].title}”. Remember to download the update when you are done.`);
+}
+function findLoc(id){
+  for(let ri=0;ri<data.rooms.length;ri++){ const r=data.rooms[ri];
+    if(r.layout==='groups'){ for(let gi=0;gi<r.groups.length;gi++){ const i=r.groups[gi].maps.indexOf(id); if(i>-1) return {list:r.groups[gi].maps,i,key:`g:${ri}:${gi}`}; } }
+    else { const i=r.maps.indexOf(id); if(i>-1) return {list:r.maps,i,key:`r:${ri}`}; } } return null;
+}
+function moveIn(id,d){ const l=findLoc(id); if(!l) return; const j=l.i+d; if(j<0||j>=l.list.length) return; [l.list[l.i],l.list[j]]=[l.list[j],l.list[l.i]]; render(); }
+function moveTo(id,key){ const l=findLoc(id); if(!l||l.key===key) return; const dest=listFor(key); if(!dest){ render(); return; } l.list.splice(l.i,1); dest.push(id); render(); }
+function removeMap(id){ if(!confirm('Remove “'+data.maps[id].title+'” from the gallery?\n(The image file stays in your repository; it just stops being shown.)')) return; const l=findLoc(id); if(l) l.list.splice(l.i,1); delete data.maps[id]; render(); }
+function setField(id,f,v){ data.maps[id][f]=v; }
+function setUn(uidn,f,v){ unplaced.find(u=>u.id===uidn)[f]=v; }
+function dropUn(uidn){ unplaced=unplaced.filter(u=>u.id!==uidn); render(); }
+
+/* ---------- rooms ---------- */
+$('#nrAdd').onclick=()=>{ const name=$('#nrName').value.trim(); if(!name){ setStatus('Type a name for the new room.'); $('#nrName').focus(); return; }
+  let id=slug(name); while(data.rooms.some(r=>r.id===id)) id+='-2'; const layout=$('#nrLayout').value;
+  const room={id,name,blurb:$('#nrBlurb').value.trim(),theme:$('#nrTheme').value,layout,orderNote:'Tell me about the place and the style you would like, and I will design your map.'};
+  if(layout==='groups') room.groups=[]; else room.maps=[]; data.rooms.push(room); $('#nrName').value=''; $('#nrBlurb').value=''; render(); setStatus('Added room “'+name+'”. It becomes a new numbered door in the walkway.'); };
+function moveRoom(i,d){ const j=i+d; if(j<0||j>=data.rooms.length) return; [data.rooms[i],data.rooms[j]]=[data.rooms[j],data.rooms[i]]; render(); }
+function delRoom(i){ const r=data.rooms[i]; const ids=r.layout==='groups'?r.groups.flatMap(g=>g.maps):r.maps; if(!confirm('Delete the room “'+r.name+'” and remove its '+ids.length+' map(s) from the gallery?')) return; ids.forEach(id=>delete data.maps[id]); data.rooms.splice(i,1); render(); }
+function setRoom(i,f,v){ data.rooms[i][f]=v; }
+function setGroup(ri,gi,v){ data.rooms[ri].groups[gi].label=v; }
+function moveGroup(ri,gi,d){ const g=data.rooms[ri].groups, j=gi+d; if(j<0||j>=g.length) return; [g[gi],g[j]]=[g[j],g[gi]]; render(); }
+function delGroup(ri,gi){ const g=data.rooms[ri].groups[gi]; if(!confirm('Delete the group “'+g.label+'” and its '+g.maps.length+' map(s)?')) return; g.maps.forEach(id=>delete data.maps[id]); data.rooms[ri].groups.splice(gi,1); render(); }
+function addGroup(ri){ const n=prompt('Name this new frame group (for example “Street maps”):','New group'); if(n==null) return; data.rooms[ri].groups.push({label:n||'New group',maps:[]}); render(); }
+
+/* ---------- rendering ---------- */
+function thumb(m){ const src=m._url||m.image; return src?`<img src="${esc(src)}" alt="">`:'Coming soon'; }
+function fieldsHtml(oninput,m,idp){
+  return `<div class="fields">
+    <label>Title<input ${idp?`id="${idp}"`:''} value="${esc(m.title)}" oninput="${oninput('title')}" placeholder="e.g. Kuala Lumpur"></label>
+    <label>Subtitle<input value="${esc(m.subtitle)}" oninput="${oninput('subtitle')}" placeholder="coordinates or a short line"></label>
+    <label>Style<input list="styles" value="${esc(m.style)}" oninput="${oninput('style')}" placeholder="e.g. Classic"></label>
+    <label>Colour / variant<input value="${esc(m.variant)}" oninput="${oninput('variant')}" placeholder="e.g. Black on white"></label>
+    <label class="wide">Description (optional)<textarea rows="1" oninput="${oninput('description')}" placeholder="Shown when someone opens the map. Leave empty to use the default text for this style.">${esc(m.description||'')}</textarea></label></div>`;
+}
+function renderUnplaced(){
+  const el=$('#unplaced'); if(!unplaced.length){ el.innerHTML=''; return; }
+  el.innerHTML=`<p class="note"><b>${unplaced.length}</b> map${unplaced.length>1?'s':''} waiting to be placed:</p>`+unplaced.map(u=>`
+    <div class="item"><div class="th">${u.url?`<img src="${esc(u.url)}" alt="">`:'Coming soon'}</div>
+      <div>${fieldsHtml(f=>`setUn(${u.id},'${f}',this.value)`,u,'ti'+u.id)}
+        <div class="acts"><b style="font-size:13px">Place in:</b><select id="t${u.id}">${optionsHtml('')}</select>
+          <button class="btn primary sm" onclick="place(${u.id})">Place map</button><button class="btn danger sm" onclick="dropUn(${u.id})">Discard</button></div></div></div>`).join('');
+}
+function mapRow(id,key){
+  const m=data.maps[id]; if(!m) return '';
+  return `<div class="item"><div class="th">${thumb(m)}</div><div>${fieldsHtml(f=>`setField('${id}','${f}',this.value)`,m,'')}
+    <div class="acts"><button class="btn sm" onclick="moveIn('${id}',-1)" title="Move earlier">↑</button><button class="btn sm" onclick="moveIn('${id}',1)" title="Move later">↓</button>
+      <span style="font-size:12px;color:var(--muted)">Move to</span><select onchange="moveTo('${id}',this.value)">${optionsHtml(key)}</select>
+      <button class="btn danger sm" onclick="removeMap('${id}')">Remove</button></div></div></div>`;
+}
+function renderRooms(){
+  const el=$('#rooms'); if(!data.rooms.length){ el.innerHTML='<div class="card empty">No rooms yet. Add one below, or press “Open maps.json…” to load your existing gallery.</div>'; return; }
+  el.innerHTML=data.rooms.map((r,ri)=>{
+    const groups=r.layout==='groups', used=groups?r.groups.length:r.maps.length, warn=used>MAXF;
+    const body=groups?(r.groups.map((g,gi)=>`<div class="grp"><div class="gh"><b style="font-size:12px;letter-spacing:.1em;text-transform:uppercase">Frame group</b>
+        <input value="${esc(g.label)}" oninput="setGroup(${ri},${gi},this.value)"><span class="tag">${g.maps.length} map${g.maps.length===1?'':'s'} (visitors slide through them)</span>
+        <button class="btn sm" onclick="moveGroup(${ri},${gi},-1)">↑</button><button class="btn sm" onclick="moveGroup(${ri},${gi},1)">↓</button><button class="btn danger sm" onclick="delGroup(${ri},${gi})">Delete group</button></div>
+        ${g.maps.map(id=>mapRow(id,`g:${ri}:${gi}`)).join('')||'<div class="empty">No maps in this group yet.</div>'}</div>`).join('')+`<div style="margin-top:10px"><button class="btn sm" onclick="addGroup(${ri})">+ Add a frame group</button></div>`)
+      :(r.maps.map(id=>mapRow(id,`r:${ri}`)).join('')||'<div class="empty">No maps in this room yet.</div>');
+    return `<div class="card room"><div class="rh"><input value="${esc(r.name)}" oninput="setRoom(${ri},'name',this.value)" aria-label="Room name">
+      <span class="tag">Door ${ri+1} · ${THEME_NAME[r.theme]||r.theme}</span><span class="tag${warn?' warn':''}">${groups?'frames':'maps'}: ${used} of ${MAXF}${warn?' · extras share the last frame':''}</span>
+      <button class="btn sm" onclick="moveRoom(${ri},-1)">↑</button><button class="btn sm" onclick="moveRoom(${ri},1)">↓</button><button class="btn danger sm" onclick="delRoom(${ri})">Delete room</button></div>
+      <input value="${esc(r.blurb||'')}" oninput="setRoom(${ri},'blurb',this.value)" placeholder="One-line description" style="margin-bottom:6px">${body}</div>`;
+  }).join('');
+}
+function renderSite(){
+  $('#etsy').value=data.site.etsyUrl||''; $('#etsy').oninput=e=>data.site.etsyUrl=e.target.value.trim();
+  const pk=data.site.packages=(data.site.packages&&data.site.packages.length?data.site.packages:[{n:'',p:''},{n:'',p:''},{n:'',p:''}]);
+  $('#pkgs').innerHTML=pk.map((p,i)=>`<div class="pk"><input value="${esc(p.n)}" placeholder="e.g. 3 maps" oninput="data.site.packages[${i}].n=this.value"><input value="${esc(p.p)}" placeholder="$12" oninput="data.site.packages[${i}].p=this.value"><label class="chk"><input type="radio" name="best" ${p.best?'checked':''} onchange="data.site.packages.forEach((x,j)=>x.best=j===${i})"> best</label></div>`).join('');
+  $('#extras').value=(data.site.extras||[]).map(x=>x.join(' | ')).join('\n'); $('#extras').oninput=e=>{ data.site.extras=e.target.value.split('\n').map(l=>l.split('|').map(s=>s.trim())).filter(a=>a[0]).map(a=>[a[0],a[1]||'']); };
+}
+function renderReviews(){
+  $('#reviews').innerHTML=data.reviews.map((r,i)=>`<div class="rv"><input value="${esc(r.name)}" placeholder="Name" oninput="data.reviews[${i}].name=this.value">
+    <select onchange="data.reviews[${i}].stars=+this.value">${[5,4,3].map(n=>`<option value="${n}"${(r.stars||5)===n?' selected':''}>${'★'.repeat(n)}</option>`).join('')}</select>
+    <textarea rows="2" placeholder="What they said" oninput="data.reviews[${i}].text=this.value">${esc(r.text)}</textarea><button class="btn danger sm" onclick="data.reviews.splice(${i},1);renderReviews()">✕</button></div>`).join('')||'<p class="empty">No reviews yet. The lobby board shows “Your review could be here” notes until you add some.</p>';
+}
+$('#addRv').onclick=()=>{ data.reviews.push({name:'',stars:5,text:''}); renderReviews(); };
+function render(){ renderUnplaced(); renderRooms(); renderSite(); renderReviews(); updateStatus(); }
+function countMaps(){ return Object.keys(data.maps).length; }
+function setStatus(t){ $('#status').textContent=t; }
+function updateStatus(){ if(!loaded&&!data.rooms.length) return; const n=Object.values(data.maps).filter(m=>m._file).length; setStatus(`${data.rooms.length} room(s) · ${countMaps()} map(s)`+(n?` · ${n} new image(s) to upload`:'')+(unplaced.length?` · ${unplaced.length} not placed yet (they will not be included)`:'')); }
+
+/* ---------- export ---------- */
+function toJpeg(file,maxW=1500){
+  return new Promise((res,rej)=>{ const img=new Image(), u=URL.createObjectURL(file);
+    img.onload=()=>{ const s=Math.min(1,maxW/img.naturalWidth), w=Math.round(img.naturalWidth*s), h=Math.round(img.naturalHeight*s), c=document.createElement('canvas'); c.width=w; c.height=h; const g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,w,h); g.drawImage(img,0,0,w,h);
+      c.toBlob(b=>{ URL.revokeObjectURL(u); b?b.arrayBuffer().then(a=>res(new Uint8Array(a))):rej(new Error('encode')); },'image/jpeg',.88); };
+    img.onerror=()=>rej(new Error('Could not read '+file.name)); img.src=u; });
+}
+const CRC=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return b=>{ let c=0xFFFFFFFF; for(let i=0;i<b.length;i++) c=t[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }; })();
+function makeZip(files){
+  const enc=new TextEncoder(), parts=[], cd=[]; let off=0; const d=new Date(), time=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1), date=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  files.forEach(f=>{ const name=enc.encode(f.path), crc=CRC(f.bytes), lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true); lh.setUint16(8,0,true); lh.setUint16(10,time,true); lh.setUint16(12,date,true); lh.setUint32(14,crc,true); lh.setUint32(18,f.bytes.length,true); lh.setUint32(22,f.bytes.length,true); lh.setUint16(26,name.length,true); lh.setUint16(28,0,true);
+    parts.push(new Uint8Array(lh.buffer),name,f.bytes);
+    const ch=new DataView(new ArrayBuffer(46)); ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(8,0x0800,true); ch.setUint16(10,0,true); ch.setUint16(12,time,true); ch.setUint16(14,date,true); ch.setUint32(16,crc,true); ch.setUint32(20,f.bytes.length,true); ch.setUint32(24,f.bytes.length,true); ch.setUint16(28,name.length,true); ch.setUint32(42,off,true);
+    cd.push(new Uint8Array(ch.buffer),name); off+=30+name.length+f.bytes.length; });
+  const cdSize=cd.reduce((a,b)=>a+b.length,0), end=new DataView(new ArrayBuffer(22)); end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true); end.setUint32(12,cdSize,true); end.setUint32(16,off,true);
+  return new Blob([...parts,...cd,new Uint8Array(end.buffer)],{type:'application/zip'});
+}
+function save(name,blob){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },800); }
+async function build(withImages){
+  const out=JSON.parse(JSON.stringify(data,(k,v)=>k.startsWith('_')?undefined:v)); const files=[];
+  out.site.packages=(out.site.packages||[]).filter(p=>p.n||p.p); out.reviews=(out.reviews||[]).filter(r=>r.name||r.text);
+  for(const [id,m] of Object.entries(data.maps)){
+    if(m._file){ if(withImages){ const path='images/'+id+'.jpg'; files.push({path,bytes:await toJpeg(m._file)}); out.maps[id].image=path; m.image=path; } else { out.maps[id].image='images/'+id+'.jpg'; } }
+    if(!out.maps[id].image) delete out.maps[id].image;
+  }
+  return {json:JSON.stringify(out,null,2),files};
+}
+$('#dlJson').onclick=async()=>{ const {json}=await build(false); save('maps.json',new Blob([json],{type:'application/json'})); setStatus('Downloaded maps.json. New images are not included in this download; use “Download update (zip)” when you added new maps.'); };
+$('#dlZip').onclick=async()=>{
+  try{ setStatus('Preparing your update…'); const {json,files}=await build(true); const all=[{path:'maps.json',bytes:new TextEncoder().encode(json)},...files]; save('gallery-update.zip',makeZip(all));
+    setStatus(`Downloaded gallery-update.zip (${files.length} new image${files.length===1?'':'s'} + maps.json). Unzip it and drag the files into your GitHub repository, replacing maps.json.`); }
+  catch(e){ setStatus('Something went wrong: '+e.message); }
+};
+render();
+</script>
+</body>
+</html>

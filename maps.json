@@ -1,0 +1,204 @@
+{
+  "site": {
+    "etsyUrl": "https://www.etsy.com/",
+    "packages": [
+      {
+        "n": "1 map",
+        "p": "$5"
+      },
+      {
+        "n": "3 maps",
+        "p": "$12"
+      },
+      {
+        "n": "5 maps",
+        "p": "$20",
+        "best": true
+      }
+    ],
+    "extras": [
+      [
+        "Extra fast delivery",
+        "+$5 to $10"
+      ],
+      [
+        "Additional revision",
+        "+$5"
+      ],
+      [
+        "Additional map",
+        "+$5"
+      ],
+      [
+        "Extra colour version",
+        "+$5"
+      ],
+      [
+        "Commercial use",
+        "+$10"
+      ],
+      [
+        "Framed mockup preview",
+        "+$5"
+      ]
+    ]
+  },
+  "rooms": [
+    {
+      "id": "city",
+      "name": "City",
+      "blurb": "Streets of the places you love",
+      "theme": "city",
+      "layout": "groups",
+      "orderNote": "City maps: pick a quantity. Each map is a different location in the same style and colours.",
+      "groups": [
+        {
+          "label": "Silhouette maps",
+          "maps": [
+            "sil_kl_w",
+            "sil_kl_b",
+            "sil_pj_w",
+            "sil_pj_b"
+          ]
+        },
+        {
+          "label": "Street maps",
+          "maps": [
+            "rect_kl",
+            "rect_pj_v",
+            "rect_pj_n",
+            "rect_sa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "memory",
+      "name": "Memory",
+      "blurb": "Maps of places that hold a story",
+      "theme": "memory",
+      "layout": "single",
+      "orderNote": "Memory maps are personal. Tell me about the place (your home, school, the spot where you first met) and I will design it with you.",
+      "maps": [
+        "mem_home",
+        "mem_school",
+        "mem_meet",
+        "mem_place"
+      ]
+    },
+    {
+      "id": "special",
+      "name": "Specialised",
+      "blurb": "Artistic maps and imagined worlds",
+      "theme": "illusion",
+      "layout": "single",
+      "orderNote": "Specialised maps are one-off art pieces. Send me your idea (an imagined world or data you want turned into art) for a custom quote.",
+      "maps": [
+        "ill_avatar",
+        "ill_species",
+        "ill_yours"
+      ]
+    }
+  ],
+  "maps": {
+    "sil_kl_w": {
+      "title": "Kuala Lumpur",
+      "subtitle": "3.15335, 101.70405",
+      "style": "Silhouette",
+      "variant": "Black on white",
+      "image": "images/sil_kl_w.jpg"
+    },
+    "sil_kl_b": {
+      "title": "Kuala Lumpur",
+      "subtitle": "3.15335, 101.70405",
+      "style": "Silhouette",
+      "variant": "White on black",
+      "image": "images/sil_kl_b.jpg"
+    },
+    "sil_pj_w": {
+      "title": "Putrajaya",
+      "subtitle": "2.94257, 101.70065",
+      "style": "Silhouette",
+      "variant": "Black on white",
+      "image": "images/sil_pj_w.jpg"
+    },
+    "sil_pj_b": {
+      "title": "Putrajaya",
+      "subtitle": "2.94257, 101.70065",
+      "style": "Silhouette",
+      "variant": "White on black",
+      "image": "images/sil_pj_b.jpg"
+    },
+    "rect_kl": {
+      "title": "Kuala Lumpur",
+      "subtitle": "3.15335, 101.70405",
+      "style": "Classic",
+      "variant": "Black on white",
+      "image": "images/rect_kl.jpg"
+    },
+    "rect_pj_v": {
+      "title": "Putrajaya",
+      "subtitle": "2.94331, 101.70046",
+      "style": "Vintage",
+      "variant": "Cream & teal water",
+      "image": "images/rect_pj_v.jpg"
+    },
+    "rect_pj_n": {
+      "title": "Putrajaya",
+      "subtitle": "2.94352, 101.69830",
+      "style": "Neon",
+      "variant": "Yellow on black",
+      "image": "images/rect_pj_n.jpg"
+    },
+    "rect_sa": {
+      "title": "Shah Alam",
+      "subtitle": "3.07256, 101.51888",
+      "style": "Midnight",
+      "variant": "White on black",
+      "image": "images/rect_sa.jpg"
+    },
+    "mem_home": {
+      "title": "Home",
+      "subtitle": "Where it all began",
+      "style": "Memory",
+      "variant": ""
+    },
+    "mem_school": {
+      "title": "School",
+      "subtitle": "Where we grew up",
+      "style": "Memory",
+      "variant": ""
+    },
+    "mem_meet": {
+      "title": "First Meet",
+      "subtitle": "The day our story started",
+      "style": "Memory",
+      "variant": ""
+    },
+    "mem_place": {
+      "title": "Our Place",
+      "subtitle": "Somewhere only we know",
+      "style": "Memory",
+      "variant": ""
+    },
+    "ill_avatar": {
+      "title": "Avatar World",
+      "subtitle": "Southeast Asia as Pandora",
+      "style": "Specialised",
+      "variant": ""
+    },
+    "ill_species": {
+      "title": "Species Distribution",
+      "subtitle": "Where life gathers",
+      "style": "Specialised",
+      "variant": ""
+    },
+    "ill_yours": {
+      "title": "Your Concept",
+      "subtitle": "Tell me the idea",
+      "style": "Specialised",
+      "variant": ""
+    }
+  },
+  "reviews": []
+}
